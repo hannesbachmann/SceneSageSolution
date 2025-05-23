@@ -15,5 +15,6 @@ To download this model, you first need to open the commandline and type in:
 ollama pull deepseek-r1:14b
 
 This will download the 9.0GB large model.
+Note: Larger models like the 32b, 70b and 671b model supposedly give a better response.
 
 
