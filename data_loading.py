@@ -9,8 +9,3 @@ def load_srt_from_file(filename):
                           'end': sub.end,
                           'content': sub.content.replace('\n', ' ')} for sub in subtitles]
     return contained_in_subs
-
-
-# if __name__ == '__main__':
-#     load_srt_from_file('subtitles.srt')
-#     pass

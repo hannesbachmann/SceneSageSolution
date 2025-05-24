@@ -9,9 +9,10 @@ def run_all():
     # combine into full sentences
     sentences = combine_subs_into_sentences(srt_data)
     scenes = split_by_pauses(sentences, pause_length=4)
+
     # process using a LLM model via API
     constructed_output = []
-    for scene in scenes:
+    for i, scene in enumerate(scenes):
         mood = extract_model_response(get_mood(scene['content']))
         summary = extract_model_response(get_summary(scene['content']))
         speakers = extract_model_response(get_speakers(scene['content']))
@@ -26,9 +27,11 @@ def run_all():
              "mood": mood,
              "cultural_refs": [cultural_references]
             })
-        print(f'{50*"-"}')
-        print(summary)
-        print(mood)
+        print(f'--- SCENE {i} {50*"-"}')
+        print('summary: \t' + summary)
+        print('mood: \t' + mood)
+        print('speakers: \t' + speakers)
+        print('cultural references: \t' + cultural_references)
         pass
     pass
 
