@@ -1,4 +1,5 @@
 from datetime import timedelta
+import re
 
 
 def combine_subs_into_sentences(srt_data):
@@ -67,3 +68,19 @@ def split_by_pauses(srt_data, pause_length=4):
                              'content': ' '.join(current_sentence)})
 
     return new_srt_data
+
+
+def format_timedelta(td):
+    # format timedelta into a more readable string output of the form 00:00:00:000 (same as in .srt)
+    total_milliseconds = int(td.total_seconds() * 1000)
+
+    hours, remainder = divmod(total_milliseconds, 3600000)
+    minutes, remainder = divmod(remainder, 60000)
+    seconds, milliseconds = divmod(remainder, 1000)
+
+    return f"{hours:02}:{minutes:02}:{seconds:02},{milliseconds:03}"
+
+
+def extract_model_response(text):
+    # removes everything within <think>...</think> to only return the model response without the thinking process
+    return re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL)
