@@ -107,8 +107,3 @@ def str_fmt_list(text):
     if 'None' in list_out:
         return []
     return list_out
-
-
-if __name__ == '__main__':
-    str_fmt_list(' the answer is ["speaker 1", speaker 2, "speaker 3", "speaker 4", speaker 5, speaker 6, speaker 7, speaker 8]')
-
