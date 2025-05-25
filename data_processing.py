@@ -84,3 +84,31 @@ def format_timedelta(td):
 def extract_model_response(text):
     # removes everything within <think>...</think> to only return the model response without the thinking process
     return re.sub(r"<think>.*?</think>\s*", "", text, flags=re.DOTALL)
+
+
+def extract_mood(text):
+    # check which mood is contained in the string and return that one
+    moods = ["Melancholic", "Romantic", "Tense", "Mysterious", "Humorous",
+             "Cheerful", "Exciting", "Dark", "Hopeful", "Contemplative"]
+
+    for mood in moods:
+        if mood.lower() in text.lower():
+            return mood
+    return None
+
+
+def str_fmt_list(text):
+    # takes as input a string that represent or contain a list and returns a list of strings
+    text = text.replace('"', '')
+    text = text.replace("'", '')
+    list_content = re.sub(r".*\[", "", text, flags=re.DOTALL)
+    list_content = re.sub(r"].*", "", list_content, flags=re.DOTALL)
+    list_out = [s.lstrip(' ') for s in list_content.split(',')]
+    if 'None' in list_out:
+        return []
+    return list_out
+
+
+if __name__ == '__main__':
+    str_fmt_list(' the answer is ["speaker 1", speaker 2, "speaker 3", "speaker 4", speaker 5, speaker 6, speaker 7, speaker 8]')
+

@@ -1,6 +1,7 @@
 from data_loading import load_srt_from_file
 from model_api import get_summary, get_mood, get_speakers, get_references
-from data_processing import combine_subs_into_sentences, split_by_pauses, format_timedelta, extract_model_response
+from data_processing import combine_subs_into_sentences, split_by_pauses, format_timedelta, extract_model_response, \
+    str_fmt_list, extract_mood
 
 
 def run_all():
@@ -13,25 +14,25 @@ def run_all():
     # process using a LLM model via API
     constructed_output = []
     for i, scene in enumerate(scenes):
-        mood = extract_model_response(get_mood(scene['content']))
+        mood = extract_mood(extract_model_response(get_mood(scene['content'])))
         summary = extract_model_response(get_summary(scene['content']))
-        speakers = extract_model_response(get_speakers(scene['content']))
-        cultural_references = extract_model_response(get_references(scene['content']))
+        speakers = str_fmt_list(extract_model_response(get_speakers(scene['content'])))
+        cultural_references = str_fmt_list(extract_model_response(get_references(scene['content'])))
         constructed_output.append(
             {
              "start": format_timedelta(scene['start']),
              "end": format_timedelta(scene['end']),
              "transcript": scene['content'],
              "summary": summary,
-             "characters": [speakers],
+             "characters": speakers,
              "mood": mood,
-             "cultural_refs": [cultural_references]
+             "cultural_refs": cultural_references
             })
         print(f'--- SCENE {i} {50*"-"}')
-        print('summary: \t' + summary)
-        print('mood: \t' + mood)
-        print('speakers: \t' + speakers)
-        print('cultural references: \t' + cultural_references)
+        print('summary:             \t' + str(summary))
+        print('mood:                \t' + str(mood))
+        print('speakers:            \t' + str(speakers))
+        print('cultural references: \t' + str(cultural_references))
         pass
     pass
 
