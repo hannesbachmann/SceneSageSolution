@@ -25,8 +25,7 @@ def store_json(data: list, exp_filename: str):
     :param exp_filename: export filename, should end on .json
     """
     # convert a json like python structure to json and store in file
-    json_data = json.dumps(data)
     with open(exp_filename, 'w') as f:
-        json.dump(json_data, f)
+        json.dump(data, f)
     pass
 

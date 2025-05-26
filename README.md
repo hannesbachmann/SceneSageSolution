@@ -25,8 +25,8 @@ Next the program can be started by using the command line:
 
     python main.py subtitles.srt --model deepseek-r1:14b --output output_scenes.json
 
-This generates a .json file containing the transcript and a summary for each scene, its start and end times, 
-the dominant mood as well as eventual cultural references.
+This generates a .json file containing the transcript and a summary, its start and end times, 
+the dominant mood as well as eventual cultural references for each scene.
 
     [
         {
