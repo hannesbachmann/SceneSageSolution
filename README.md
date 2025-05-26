@@ -58,6 +58,7 @@ The generated output stored in the defined .json file then looks like this.
         "cultural_refs": []
         }
     ]
+An example can be found in "output_scenes_example.json" which used the deepseek-r1:14b model.
 
 
 ## References
