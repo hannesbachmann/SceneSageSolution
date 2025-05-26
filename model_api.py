@@ -1,7 +1,7 @@
 import ollama
 
 
-def model_request(sys_input: str, user_input: str, model: str):
+def model_request(sys_input: str, user_input: str, model: str) -> str:
     """Generate a LLM output using a system and user prompt for a specified LLM.
 
     :param sys_input: system prompt
@@ -9,6 +9,9 @@ def model_request(sys_input: str, user_input: str, model: str):
     :param model: model name
     :return: string, model response
     """
+    # check if model is installed
+    if not check_model_installed(model):
+        raise ValueError(f'Defined model is not installed. Please use "ollama pull {model}" in your command line to install it.')
     # define used model
     # chat with model with messages for roles system and user
     ollama_response = ollama.chat(model=model, messages=[
@@ -26,7 +29,7 @@ def model_request(sys_input: str, user_input: str, model: str):
     return ollama_response['message']['content']
 
 
-def get_summary(scene_sub: str, model: str):
+def get_summary(scene_sub: str, model: str) -> str:
     """Use an LLM to generate a summary of a given scene subtitles.
 
     :param scene_sub: Subtitles for the current scene
@@ -38,7 +41,7 @@ def get_summary(scene_sub: str, model: str):
     return model_request(sys_input, user_input, model)
 
 
-def get_speakers(scene_sub: str, model: str):
+def get_speakers(scene_sub: str, model: str) -> str:
     """Use an LLM to determine which speakers are corresponding to the subtitles.
 
     :param scene_sub: Subtitles for the current scene
@@ -52,7 +55,7 @@ def get_speakers(scene_sub: str, model: str):
     return model_request(sys_input, user_input, model)
 
 
-def get_mood(scene_sub: str, model: str):
+def get_mood(scene_sub: str, model: str) -> str:
     """Use an LLM to determine the overall represented mood in this scene.
 
     :param scene_sub: Subtitles for the current scene
@@ -66,7 +69,7 @@ def get_mood(scene_sub: str, model: str):
     return model_request(sys_input, user_input, model)
 
 
-def get_references(scene_sub: str, model: str):
+def get_references(scene_sub: str, model: str) -> str:
     """Use an LLM to detect all cultural references that might be contained in the scene subtitles.
 
     :param scene_sub: Subtitles for the current scene
@@ -79,3 +82,17 @@ def get_references(scene_sub: str, model: str):
                  f'Return a list of references in the form: "[reference 1, reference 2]". ' \
                  f'If there is no reference, return only the word "None". Use the following subtitles: "{scene_sub}"'
     return model_request(sys_input, user_input, model)
+
+
+def check_model_installed(model_name: str) -> bool:
+    """Check if a model is installed.
+
+    :param model_name: name of the model
+    :return: True if the model is installed, False otherwise
+    """
+    # get a list of all with ollama installed models
+    ollama_info = ollama.list()
+    for installed_model in ollama_info.models:
+        if installed_model.model == model_name:
+            return True
+    return False

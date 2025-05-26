@@ -26,6 +26,7 @@ def run_all():
     # process using a LLM model via API
     constructed_output = []
     for i, scene in enumerate(scenes):
+        # use LLM to get mood, summary, speakers/characters and cultural references
         mood = extract_mood(extract_model_response(get_mood(scene['content'], model=config_args.model)))
         summary = extract_model_response(get_summary(scene['content'], model=config_args.model))
         speakers = str_fmt_list(extract_model_response(get_speakers(scene['content'], model=config_args.model)))
@@ -46,11 +47,9 @@ def run_all():
         print('speakers:            \t' + str(speakers))
         print('cultural references: \t' + str(cultural_references))
         store_json(constructed_output.copy(), exp_filename=config_args.output)
-        pass
-    pass
 
 
-def get_config_arguments():
+def get_config_arguments() -> argparse.Namespace:
     """Parse arguments for configuration.
 
     :return: arguments: filename, model, output
@@ -62,9 +61,20 @@ def get_config_arguments():
     parser.add_argument('-o', '--output')
 
     args = parser.parse_args()
+
+    # check if argument inputs are valid
+    if not args.filename.endswith('.srt'):
+        # file must be a .srt subtitle file
+        raise ValueError('Filename must end with .srt')
+    if not args.model in ['deepseek-r1:1.5b', 'deepseek-r1:7b', 'deepseek-r1:8b', 'deepseek-r1:14b', 'deepseek-r1:32b',
+                          'deepseek-r1:70b', 'deepseek-r1:671b', 'deepseek-r1']:
+        # model is not one of the currently available deepseek models
+        raise ValueError('Model must be one of the installed DeepSeek-R1 models')
+    if not args.output.endswith('.json'):
+        # output file name must be a .json file
+        raise ValueError('Output file must end with .json')
     return args
 
 
 if __name__ == '__main__':
     run_all()
-    pass

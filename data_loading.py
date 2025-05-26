@@ -2,14 +2,17 @@ import srt
 import json
 
 
-def load_srt_from_file(filename):
+def load_srt_from_file(filename: str) -> list:
     """Load a .srt file containing subtitles. Converting them into an easy-to-process format.
 
     :param filename: input subtitle filename, should end with .srt
     :return: list of dicts: {start: timedelta, end: timedelta, content: str}
     """
-    with open(filename, 'r') as f:
-        subs = srt.parse(f.read())
+    try:
+        with open(filename, 'r') as f:
+            subs = srt.parse(f.read())
+    except FileNotFoundError:
+        raise FileNotFoundError(f"File {filename} not found.")
     subtitles = list(subs)
     contained_in_subs = [{'start': sub.start,
                           'end': sub.end,
@@ -25,7 +28,9 @@ def store_json(data: list, exp_filename: str):
     :param exp_filename: export filename, should end on .json
     """
     # convert a json like python structure to json and store in file
-    with open(exp_filename, 'w') as f:
-        json.dump(data, f)
-    pass
+    try:
+        with open(exp_filename, 'w') as f:
+            json.dump(data, f)
+    except Exception as e:
+        print('Cannot store output as json. Skip storing.')
 
