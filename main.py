@@ -30,7 +30,8 @@ def run_all():
         mood = extract_mood(extract_model_response(get_mood(scene['content'], model=config_args.model)))
         summary = extract_model_response(get_summary(scene['content'], model=config_args.model))
         speakers = str_fmt_list(extract_model_response(get_speakers(scene['content'], model=config_args.model)))
-        cultural_references = str_fmt_list(extract_model_response(get_references(scene['content'], model=config_args.model)))
+        cultural_references = str_fmt_list(
+            extract_model_response(get_references(scene['content'], model=config_args.model)))
         constructed_output.append(
             {
                 "start": format_timedelta(scene['start']),
@@ -66,7 +67,7 @@ def get_config_arguments() -> argparse.Namespace:
     if not args.filename.endswith('.srt'):
         # file must be a .srt subtitle file
         raise ValueError('Filename must end with .srt')
-    if not args.model in ['deepseek-r1:1.5b', 'deepseek-r1:7b', 'deepseek-r1:8b', 'deepseek-r1:14b', 'deepseek-r1:32b',
+    if args.model not in ['deepseek-r1:1.5b', 'deepseek-r1:7b', 'deepseek-r1:8b', 'deepseek-r1:14b', 'deepseek-r1:32b',
                           'deepseek-r1:70b', 'deepseek-r1:671b', 'deepseek-r1']:
         # model is not one of the currently available deepseek models
         raise ValueError('Model must be one of the installed DeepSeek-R1 models')
